@@ -16,6 +16,12 @@ class CreatePhotosTable extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->softDeletes();
+            $table->string('name',128);
+            $table->text('description');
+            $table->bigInteger('album_id')->unsigned();
+            $table->string('img_path',128);
+            $table->foreign('album_id')->on('albums')->references('id')->onDelete('cascade');
         });
     }
 
