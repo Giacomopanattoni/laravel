@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateColumnNameAlbums extends Migration
+class AlbumsModifyName extends Migration
 {
     /**
      * Run the migrations.
@@ -26,7 +26,7 @@ class UpdateColumnNameAlbums extends Migration
     public function down()
     {
         Schema::table('albums', function (Blueprint $table) {
-            $table->string('album_name',128)->change();
+            $table->string('album_name',200)->change();
         });
     }
 }

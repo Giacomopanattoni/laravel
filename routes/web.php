@@ -11,6 +11,18 @@
 |
 */
 
+use App\Models\Album;
+use App\User;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/albums', function(){
+    return Album::all();
+});
+
+
+Route::get('/users', function(){
+    return User::truncate();
 });
