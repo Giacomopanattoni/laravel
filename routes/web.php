@@ -12,17 +12,21 @@
 */
 
 use App\Models\Album;
+use App\Models\Photo;
 use App\User;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/albums', function(){
-    return Album::all();
-});
+Route::get('/albums','AlbumsController@index');
+Route::get('/albums/{id}/delete','AlbumsController@delete');
 
 
 Route::get('/users', function(){
     return User::all();
+});
+
+Route::get('/photos', function(){
+    return Photo::all();
 });

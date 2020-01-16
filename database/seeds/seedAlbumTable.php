@@ -13,8 +13,6 @@ class seedAlbumTable extends Seeder
     public function run()
     {
         
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        Album::truncate();
         factory(App\Models\Album::class , 10) ->create();  /* richiama la factori creata in app\database\factories\UserFactory */
 
     }
