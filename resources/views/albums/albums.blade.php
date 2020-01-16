@@ -5,13 +5,17 @@
 
 @section('body')
 
+    <input type="hidden" value="{{ csrf_token() }}" id="_token">
     <ul class="mt-5">
 
     @foreach ($albums as $album)
 
     <li class="list-group-item d-flex justify-content-between">
         {{$album->album_name}} 
-        <a href="/albums/{{$album->id}}/delete" class="btn btn-danger">Elimina album</a>
+        <div>
+            <a href="/albums/{{$album->id}}" class="btn btn-danger">Elimina album</a>
+            <a href="/albums/{{$album->id}}/edit" class="btn btn-success">Aggiorna album</a>
+        </div>
     </li>
         
     @endforeach
@@ -28,11 +32,19 @@
     <script>
 
         jQuery(document).ready(function(){
-            jQuery('ul').on('click','a', function(e){
+            jQuery('ul').on('click','a.btn-danger', function(e){
                 e.preventDefault();
                 let url = jQuery(this).attr('href');
                 let parent = jQuery(this).parents('li');
                 $.ajax(url,{
+
+
+                    method : 'DELETE',
+
+                    data : {
+                        _token : jQuery('#_token').val()
+                    },
+
                     complete : function(res){
                         if(res.responseText == true){
                             parent.remove();
