@@ -24,5 +24,5 @@ Route::get('/albums', function(){
 
 
 Route::get('/users', function(){
-    return User::truncate();
+    return User::all();
 });
