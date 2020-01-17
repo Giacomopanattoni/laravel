@@ -5,8 +5,17 @@
 
 @section('body')
 
+
+    {{-- stampo la variabile di sessione settata in albumsController@store --}}
+    @if( session()->has('message') )
+        <div class="mt-5 alert alert-info">{{ session()->get('message') }}</div>
+    @endif
+
+    
+
+
     <input type="hidden" value="{{ csrf_token() }}" id="_token">
-    <ul class="mt-5">
+    <ul class="mt-5 pl-0">
 
     @foreach ($albums as $album)
 
