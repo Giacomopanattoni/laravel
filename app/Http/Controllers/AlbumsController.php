@@ -16,8 +16,9 @@ class AlbumsController extends Controller
     public function index(Request $request)
     {  // metodo nel quale viene iniettata la request get della pagina albums  es: sito/album?id=1
 
-        $sql = 'select * from albums WHERE 1=1 ';
-        $where = [];
+        //$sql = 'select * from albums WHERE 1=1 ';
+        
+        /* $where = [];
 
         if ($request->has('id')) {
             $where['id'] =  $request->get('id');
@@ -31,7 +32,19 @@ class AlbumsController extends Controller
         $sql .= ' ORDER BY id desc';
 
         $albums = DB::select($sql, array_values($where));
-        return view('albums.albums', ['albums' => $albums]);
+        return view('albums.albums', ['albums' => $albums]); */
+
+        $queryBuilder = DB::table('albums')->orderBy('id','DESC');
+
+        if($request->has('id')){
+            $queryBuilder->where('id','=', $request->get('id'));
+        }
+
+        if($request->has('album_name')){
+            $queryBuilder->where('album_name','like', $request->get('album_name'));
+        }
+
+        return view('albums.albums', ['albums' => $queryBuilder->get()]);
     }
 
 
