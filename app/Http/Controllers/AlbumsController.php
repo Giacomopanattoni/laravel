@@ -41,7 +41,7 @@ class AlbumsController extends Controller
         }
 
         if($request->has('album_name')){
-            $queryBuilder->where('album_name','like', $request->get('album_name'));
+            $queryBuilder->where('album_name','like', '%'.$request->get('album_name').'%');
         }
 
         return view('albums.albums', ['albums' => $queryBuilder->get()]);
@@ -55,8 +55,10 @@ class AlbumsController extends Controller
     public function delete($id)
     {
 
-        $sql = 'DELETE from albums WHERE id= :id';
-        return DB::delete($sql, ['id' => $id]);
+        return DB::table('albums')->where('id',$id)->delete();
+
+        /* $sql = 'DELETE from albums WHERE id= :id';
+        return DB::delete($sql, ['id' => $id]); */
         //return redirect()->back();
 
     }
@@ -68,9 +70,9 @@ class AlbumsController extends Controller
 
     public function show($id)
     {
-
-        $sql = 'SELECT * from albums WHERE id= :id';
-        return DB::select($sql, ['id' => $id]);
+        return DB::table('albums')->where('id',$id)->get();
+        /* $sql = 'SELECT * from albums WHERE id= :id';
+        return DB::select($sql, ['id' => $id]); */
         //return redirect()->back();
 
     }
@@ -82,11 +84,12 @@ class AlbumsController extends Controller
     public function edit($id)
     {
 
-        $sql = 'SELECT * from albums WHERE id=:id';
+        $query = DB::table('albums')->where('id',$id)->get();
+        /* $sql = 'SELECT * from albums WHERE id=:id';
 
-        $album = DB::select($sql, ['id' => $id]);
+        $album = DB::select($sql, ['id' => $id]); */
 
-        return view('albums.edit', ['album' => $album[0]]);
+        return view('albums.edit', ['album' => $query[0]]);
         //return redirect()->back();
 
     }
@@ -98,11 +101,21 @@ class AlbumsController extends Controller
 
     public function store($id , Request $request)
     {
-        $data = request()->only(['album_name', 'description']);
+        /* $data = request()->only(['album_name', 'description']);
         $data['id']=$id;
         $sql = 'UPDATE albums SET album_name=:album_name, description=:description';
         $sql.= ' WHERE id=:id';
         $res = DB::update($sql, $data);
+        $messaggio = $res ? 'Album Aggiornato' : 'Album non aggiornato';
+        session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
+        return redirect()->route('albums'); */
+
+        $data = request()->only(['album_name', 'description']);
+        $data['id']=$id;
+        $res = DB::table('albums')->where('id',$id)->update([
+            'album_name' => $data['album_name'],
+            'description' => $data['description']
+        ]);
         $messaggio = $res ? 'Album Aggiornato' : 'Album non aggiornato';
         session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
         return redirect()->route('albums');
@@ -125,12 +138,18 @@ class AlbumsController extends Controller
         
         $data = request()->only('album_name','description');
         $data['user_id'] = 1;
-        $sql = 'INSERT INTO albums ( album_name, description, user_id)';
+        /* $sql = 'INSERT INTO albums ( album_name, description, user_id)';
         $sql .= ' VALUES(:album_name, :description, :user_id)';
-        $res = DB::insert($sql, $data);
+        $res = DB::insert($sql, $data); */
+        
+        
+        $res = DB::table('albums')->insert([
+            'album_name' => $data['album_name'],
+            'description' => $data['description'],
+            'user_id' => 1,
+        ]);
         $messaggio = $res ? 'Album creato' : 'Album non creato';
         session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
         return redirect()->route('albums');
-
     }
 }
