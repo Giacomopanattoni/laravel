@@ -20,7 +20,14 @@
     @foreach ($albums as $album)
 
     <li class="list-group-item d-flex justify-content-between">
+        
+        @if($album->path)
+            <div class="form-group">
+            <img src="{{$album->path}}">
+            </div>
+        @endif
         {{$album->album_name}} 
+
         <div>
             <a href="/albums/{{$album->id}}" class="btn btn-danger">Elimina album</a>
             <a href="/albums/{{$album->id}}/edit" class="btn btn-success">Aggiorna album</a>

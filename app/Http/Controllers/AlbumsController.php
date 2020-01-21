@@ -34,7 +34,7 @@ class AlbumsController extends Controller
         $albums = DB::select($sql, array_values($where));
         return view('albums.albums', ['albums' => $albums]); */
 
-        $queryBuilder = DB::table('albums')->orderBy('id','DESC');
+        $queryBuilder = Album::orderBy('id','DESC');
 
         if($request->has('id')){
             $queryBuilder->where('id','=', $request->get('id'));
@@ -55,8 +55,9 @@ class AlbumsController extends Controller
     public function delete($id)
     {
 
-        return DB::table('albums')->where('id',$id)->delete();
+        //return Album::where('id',$id)->delete();
 
+        return ''.Album::find($id)->delete();
         /* $sql = 'DELETE from albums WHERE id= :id';
         return DB::delete($sql, ['id' => $id]); */
         //return redirect()->back();
@@ -70,7 +71,7 @@ class AlbumsController extends Controller
 
     public function show($id)
     {
-        return DB::table('albums')->where('id',$id)->get();
+        return Album::where('id',$id)->get();
         /* $sql = 'SELECT * from albums WHERE id= :id';
         return DB::select($sql, ['id' => $id]); */
         //return redirect()->back();
@@ -84,12 +85,14 @@ class AlbumsController extends Controller
     public function edit($id)
     {
 
-        $query = DB::table('albums')->where('id',$id)->get();
         /* $sql = 'SELECT * from albums WHERE id=:id';
 
         $album = DB::select($sql, ['id' => $id]); */
-
-        return view('albums.edit', ['album' => $query[0]]);
+        //$album = Album::where('id',$id)->get();
+        $album = Album::find($id);
+        
+        //return view('albums.edit', ['album' => $album[0]]);
+        return view('albums.edit', ['album' => $album]);
         //return redirect()->back();
 
     }
@@ -110,12 +113,27 @@ class AlbumsController extends Controller
         session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
         return redirect()->route('albums'); */
 
-        $data = request()->only(['album_name', 'description']);
+        /* $data = request()->only(['album_name', 'description']);
         $data['id']=$id;
-        $res = DB::table('albums')->where('id',$id)->update([
+        $res = Album::where('id',$id)->update([
             'album_name' => $data['album_name'],
             'description' => $data['description']
-        ]);
+        ]); */
+
+        //dd(request()->input('album_thumb'));
+        
+        $album = Album::find($id);
+        $album->album_name = request()->input('album_name');
+        $album->description = request()->input('description');
+        if($request->hasFile('album_thumb')){
+            $file = $request->file('album_thumb');
+            //$fileName = $file->store(env('ALBUM_THUMB_DIR'));
+            $fileName = $file->storeAs(env('ALBUM_THUMB_DIR'), $id.'.'.$file->extension() );
+            $album->album_thumb = $fileName;
+        }
+        $res = $album->save();
+
+
         $messaggio = $res ? 'Album Aggiornato' : 'Album non aggiornato';
         session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
         return redirect()->route('albums');
@@ -136,18 +154,26 @@ class AlbumsController extends Controller
     public function save(Request $request)
     {
         
-        $data = request()->only('album_name','description');
-        $data['user_id'] = 1;
+        /* $data = request()->only('album_name','description');
+        $data['user_id'] = 1; */
         /* $sql = 'INSERT INTO albums ( album_name, description, user_id)';
         $sql .= ' VALUES(:album_name, :description, :user_id)';
         $res = DB::insert($sql, $data); */
         
         
-        $res = DB::table('albums')->insert([
+        /* $res = Album::create([
             'album_name' => $data['album_name'],
             'description' => $data['description'],
             'user_id' => 1,
-        ]);
+        ]); */
+
+        $album = new Album();
+        $album->album_name = request()->input('album_name');
+        $album->description = request()->input('description');
+        $album->user_id = 1;
+        $res = $album->save();
+
+
         $messaggio = $res ? 'Album creato' : 'Album non creato';
         session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
         return redirect()->route('albums');

@@ -18,24 +18,27 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(Album::class, function (Faker $faker) {
+$categories = array(
+    'cats',
+    'business',
+    'abstract') 
+;
+
+$factory->define(Album::class, function (Faker $faker) use ($categories) {
     return [
         'album_name' => $faker->name,
         'description' => $faker->text(128),
-        'user_id' => User::inRandomOrder()->first()->id
+        'user_id' => User::inRandomOrder()->first()->id,
+        'album_thumb' => $faker ->imageUrl(120,120, $faker->randomElement($categories))
     ];
 });
 
 
-$factory->define(Photo::class, function (Faker $faker) {
+$factory->define(Photo::class, function (Faker $faker) use ($categories) {
     return [
         'name' => $faker->text(64),
         'description' => $faker->text(128),
         'album_id' => Album::inRandomOrder()->first()->id,
-        'img_path' => $faker->imageUrl( 640,480,$faker->randomElement( array(
-            'cats',
-            'business',
-            'abstract') 
-            ))
+        'img_path' => $faker->imageUrl( 640,480,$faker->randomElement( $categories ))
     ];
 });

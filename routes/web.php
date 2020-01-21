@@ -41,3 +41,16 @@ Route::get('/users', function(){
 Route::get('/photos', function(){
     return Photo::all();
 });
+
+
+/* 
+* ritorna tutti gli utenti con un album
+*/
+Route::get('/usersnoalbum', function(){
+    $usernoalbum = DB::table('users as u')
+    ->leftJoin('albums as a', 'u.id','=', 'a.user_id')
+    ->select('u.id', 'u.email', 'u.name','album_name')
+    ->whereNull('album_name')
+    ->get();  
+    dd($usernoalbum);
+});
