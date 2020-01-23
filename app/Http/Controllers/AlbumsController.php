@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AlbumsController extends Controller
 {
@@ -34,8 +36,8 @@ class AlbumsController extends Controller
         $albums = DB::select($sql, array_values($where));
         return view('albums.albums', ['albums' => $albums]); */
 
-        $queryBuilder = Album::orderBy('id','DESC');
-
+        $queryBuilder = Album::orderBy('id','DESC')->withCount('photos');  // metodo photos dichiarato in Album.php
+        
         if($request->has('id')){
             $queryBuilder->where('id','=', $request->get('id'));
         }
@@ -43,8 +45,9 @@ class AlbumsController extends Controller
         if($request->has('album_name')){
             $queryBuilder->where('album_name','like', '%'.$request->get('album_name').'%');
         }
-
-        return view('albums.albums', ['albums' => $queryBuilder->get()]);
+        return view('albums.albums', [
+            'albums' => $queryBuilder->get()
+            ]);
     }
 
 
@@ -52,15 +55,31 @@ class AlbumsController extends Controller
     * delete album by id
     */
 
-    public function delete($id)
+    public function delete(Album $album)  // variabile album uguale a quella che c'è mella rotta delete vedi \routes\web.php
     {
 
         //return Album::where('id',$id)->delete();
 
-        return ''.Album::find($id)->delete();
+        
         /* $sql = 'DELETE from albums WHERE id= :id';
         return DB::delete($sql, ['id' => $id]); */
         //return redirect()->back();
+
+        //return ''.Album::find($id)->delete();
+        $thumbnail = $album->album_thumb;
+
+        
+        $res = $album->delete();
+
+        if($res){
+
+            if($thumbnail && Storage::disk('public')->has($thumbnail)){
+                Storage::disk('public')->delete($thumbnail);
+            }
+
+        }
+
+        return '' . $res;
 
     }
 
@@ -170,12 +189,44 @@ class AlbumsController extends Controller
         $album = new Album();
         $album->album_name = request()->input('album_name');
         $album->description = request()->input('description');
+        $album->album_thumb = '';
+        /* if($request->hasFile('album_thumb')){
+            $file = $request->file('album_thumb');
+            $fileUrl = $file->storeAs(env('ALBUM_THUMB_DIR'),$album->id.$file->extension());
+            $album->album_thumb = env('ALBUM_THUMB_DIR').$album->id;
+        } */
+        
         $album->user_id = 1;
         $res = $album->save();
+        if($res  && $request->hasFile('album_thumb') && $request->file('album_thumb')->isValid()){
+            
+            $file = $request->file('album_thumb');
+            $fileName = $file->storeAs(env('ALBUM_THUMB_DIR'), $album->id.'.'.$file->extension() );
+            $album->album_thumb = $fileName;
+            $res = $album->save();
+        }
 
 
         $messaggio = $res ? 'Album creato' : 'Album non creato';
         session()->flash('message',$messaggio);  // setta una variabile di sessione solo per un ricarica della pagina
         return redirect()->route('albums');
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | getImages
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    public function getImages(Album $album){
+        $images = Photo::where('album_id',$album->id)->get();
+        return view('images.images',[
+            'album' => $album,
+            'images' => $images
+        ]);
+
+    }
+
 }

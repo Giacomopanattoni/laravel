@@ -28,4 +28,8 @@ protected $primaryKey = "id";
         }
         return $url;
     }
+
+    public function photos(){
+        return $this->hasMany(Photo::class, 'album_id','id'); //dichiaro che un album ha tante foto per utilizzare questo metodo in albumcontroller index
+    }
 }
