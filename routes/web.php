@@ -57,3 +57,7 @@ Route::get('/usersnoalbum', function(){
     ->get();  
     dd($usernoalbum);
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

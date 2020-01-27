@@ -122,7 +122,7 @@ class AlbumsController extends Controller
     * edit album by id
     */
 
-    public function store($id , AlbumRequest $request)
+    public function store($id , Request $request)
     {
         /* $data = request()->only(['album_name', 'description']);
         $data['id']=$id;
