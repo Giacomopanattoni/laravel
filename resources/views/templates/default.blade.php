@@ -44,6 +44,23 @@
         <div class="container">
 
         <h1 class="text-center mt-5">@yield('title','home')</h1>
+
+
+        @if (count($errors))
+        <div class="alert">
+
+          <ul>
+            @foreach ($errors->all() as $error)
+               <li>
+                {{ $error }}
+               </li>
+            @endforeach
+          </ul>
+
+        </div>
+            
+        @endif
+
         @section('body')
         body content
         @show

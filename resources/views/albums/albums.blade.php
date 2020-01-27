@@ -13,7 +13,7 @@
 
     
 
-
+    
     <input type="hidden" value="{{ csrf_token() }}" id="_token">
     <ul class="mt-5 pl-0">
 
@@ -38,6 +38,7 @@
             @endif
             <a href="/albums/{{$album->id}}" class="btn btn-danger">Elimina album</a>
             <a href="/albums/{{$album->id}}/edit" class="btn btn-success">Aggiorna album</a>
+        <a href="{{ route('photos.create') }}/?album_id={{ $album->id }}" class="btn btn-success">+</a>
         </div>
     </li>
         

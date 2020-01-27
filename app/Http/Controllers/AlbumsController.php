@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AlbumRequest;
 use App\Models\Album;
 use App\Models\Photo;
 use Illuminate\Http\Request;
@@ -121,7 +122,7 @@ class AlbumsController extends Controller
     * edit album by id
     */
 
-    public function store($id , Request $request)
+    public function store($id , AlbumRequest $request)
     {
         /* $data = request()->only(['album_name', 'description']);
         $data['id']=$id;
@@ -170,7 +171,7 @@ class AlbumsController extends Controller
 
     }
 
-    public function save(Request $request)
+    public function save(AlbumRequest $request)
     {
         
         /* $data = request()->only('album_name','description');
@@ -221,7 +222,7 @@ class AlbumsController extends Controller
     */
 
     public function getImages(Album $album){
-        $images = Photo::where('album_id',$album->id)->get();
+        $images = Photo::where('album_id',$album->id)->paginate(10);
         return view('images.images',[
             'album' => $album,
             'images' => $images

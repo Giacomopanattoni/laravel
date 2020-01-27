@@ -24,13 +24,23 @@
         <td>{{$image->name}}</td>
         <td>{{$album->album_name}}</td>
         <td>{{$image->img_path}}</td>
-        <td><a class="btn btn-danger" href="{{ route('photos.destroy', $image->id )}}">delete</a></td>
+        <td>
+            <a class="btn btn-danger" href="{{ route('photos.destroy', $image->id )}}">delete</a>
+            <a class="btn btn-success" href="{{ route('photos.edit', $image->id )}}">edit</a>
+        </td>
     </tr>
 @empty
     <tr>
         <td>Nessuna immagine trovata</td>
     </tr>
+    
 @endforelse
+
+<tr>
+    <td>
+        {{$images->links()}}
+    </td>
+</tr>
 </table>
     
 @endsection
@@ -57,7 +67,7 @@
 
                     complete : function(res){
                         console.log(res);
-                        if(res.responseText == true){
+                        if(res.responseText == 'true'){
                             parent.remove();
                         }else{
                             alert('problemi a contattare il server');

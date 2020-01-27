@@ -43,7 +43,7 @@ Route::get('/users', function(){
 
 Route::get('/photos', function(){ 
     return Photo::all();
-});
+})->name('photos.index');
 
 
 /* 
