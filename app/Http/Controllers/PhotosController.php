@@ -16,8 +16,8 @@ class PhotosController extends Controller
 
 
      protected $rules = [
-        'album_id' => 'required|digits:100|exists:album',
-        'name' => 'required|unique:photos:name',
+        'album_id' => 'required|digits_between:1,100|exists:albums,id',
+        'name' => 'required|unique:photos,name',
         'description' => 'required',
         'img_path' => 'required|image'
      ];

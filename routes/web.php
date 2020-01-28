@@ -15,49 +15,57 @@ use App\Models\Album;
 use App\Models\Photo;
 use App\User;
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('welcome');
-})->name('home');
+})->name('home'); */
 
-Route::get('/albums','AlbumsController@index')->name('albums');
+Route::group(['middleware' => ['auth','verified']], function () {
 
-Route::delete('/albums/{album}','AlbumsController@delete')->where('album','[0-9]+');
+    Route::get('/albums/create', 'AlbumsController@create')->name('album.create');
 
-Route::get('/albums/{id}','AlbumsController@show')->where('id','[0-9]+');
+    Route::get('/albums', 'AlbumsController@index')->name('albums')/* ->middleware('auth') */;
 
-Route::get('/albums/{id}/edit','AlbumsController@edit');
+    Route::get('/', 'AlbumsController@index')->name('home')/* ->middleware('auth') */;
 
-Route::get('/albums/create','AlbumsController@create')->name('album.create');
+    Route::delete('/albums/{album}', 'AlbumsController@delete')->where('album', '[0-9]+');
 
-Route::post('/albums','AlbumsController@save')->name('album.save');
+    Route::get('/albums/{id}', 'AlbumsController@show')->where('id', '[0-9]+');
 
-Route::patch('/albums/{id}','AlbumsController@store');
+    Route::get('/albums/{id}/edit', 'AlbumsController@edit');
 
-Route::get('/albums/{album}/images','AlbumsController@getImages')->name('album.getImages')->where('album','[0-9]+');
+    Route::post('/albums', 'AlbumsController@save')->name('album.save');
 
-Route::resource('photos', 'PhotosController');
+    Route::patch('/albums/{id}', 'AlbumsController@store');
 
-Route::get('/users', function(){
-    return User::all();
+    Route::get('/albums/{album}/images', 'AlbumsController@getImages')->name('album.getImages')->where('album', '[0-9]+');
+
+    Route::resource('photos', 'PhotosController');
+
+   /*  Route::get('/users', function () {
+        return User::all();
+    });
+
+    Route::get('/photos', function () {
+        return Photo::all();
+    })->name('photos.index'); */
 });
 
-Route::get('/photos', function(){ 
-    return Photo::all();
-})->name('photos.index');
+
 
 
 /* 
 * ritorna tutti gli utenti con un album
 */
-Route::get('/usersnoalbum', function(){
+Route::get('/usersnoalbum', function () {
     $usernoalbum = DB::table('users as u')
-    ->leftJoin('albums as a', 'u.id','=', 'a.user_id')
-    ->select('u.id', 'u.email', 'u.name','album_name')
-    ->whereNull('album_name')
-    ->get();  
+        ->leftJoin('albums as a', 'u.id', '=', 'a.user_id')
+        ->select('u.id', 'u.email', 'u.name', 'album_name')
+        ->whereNull('album_name')
+        ->get();
     dd($usernoalbum);
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+/* Route::get('/home', 'HomeController@index')->name('home'); */

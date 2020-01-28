@@ -16,15 +16,6 @@ class AlbumRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     * 
-     * 
-     * 
-     */
-
 
 
 
@@ -37,7 +28,7 @@ class AlbumRequest extends FormRequest
         return [
         'album_name' => 'required|unique:albums,album_name',
         'description' => 'required',
-        'img_path' => 'required|image',
+        'album_thumb' => 'required|image',
         /* 'user_id' => 'required' */
         ];
     }

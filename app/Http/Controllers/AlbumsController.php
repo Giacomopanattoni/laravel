@@ -6,6 +6,7 @@ use App\Http\Requests\AlbumRequest;
 use App\Models\Album;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,6 +16,13 @@ class AlbumsController extends Controller
     /* 
     * show all albums
     */
+
+    public function __construct()
+    {
+        //$this->middleware('auth')->only('create');
+        //$this->middleware('auth')->only(['create','edit']);
+        //$this->middleware('auth');
+    }
 
     public function index(Request $request)
     {  // metodo nel quale viene iniettata la request get della pagina albums  es: sito/album?id=1
@@ -38,6 +46,7 @@ class AlbumsController extends Controller
         return view('albums.albums', ['albums' => $albums]); */
 
         $queryBuilder = Album::orderBy('id','DESC')->withCount('photos');  // metodo photos dichiarato in Album.php
+        $queryBuilder->where('user_id',Auth::user()->id);
         
         if($request->has('id')){
             $queryBuilder->where('id','=', $request->get('id'));
@@ -197,7 +206,8 @@ class AlbumsController extends Controller
             $album->album_thumb = env('ALBUM_THUMB_DIR').$album->id;
         } */
         
-        $album->user_id = 1;
+        $album->user_id = Auth::user()->id;
+        
         $res = $album->save();
         if($res  && $request->hasFile('album_thumb') && $request->file('album_thumb')->isValid()){
             
