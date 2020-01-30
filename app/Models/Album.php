@@ -32,4 +32,8 @@ protected $primaryKey = "id";
     public function photos(){
         return $this->hasMany(Photo::class, 'album_id','id'); //dichiaro che un album ha tante foto per utilizzare questo metodo in albumcontroller index
     }
+
+    public function user(){
+        return $this->belongsTo(User::class)
+    }
 }

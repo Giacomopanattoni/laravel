@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AlbumRequest;
 use App\Models\Album;
 use App\Models\Photo;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ class AlbumsController extends Controller
 
     public function __construct()
     {
+        //$this->middleware('auth');
         //$this->middleware('auth')->only('create');
         //$this->middleware('auth')->only(['create','edit']);
         //$this->middleware('auth');
@@ -121,6 +123,14 @@ class AlbumsController extends Controller
         $album = Album::find($id);
         
         //return view('albums.edit', ['album' => $album[0]]);
+
+        /* if($album->user->id != Auth::user()->id){
+            abort(401,'Unauthorize');
+        } */
+        if(Gate::denies('manage-album', $album)){
+            abort(401,'Unauthorize');
+        }
+
         return view('albums.edit', ['album' => $album]);
         //return redirect()->back();
 
