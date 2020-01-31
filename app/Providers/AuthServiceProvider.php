@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Album;
+use App\Models\Photo;
 use App\Models\User;
+use App\Policies\AlbumPolicy;
+use App\Policies\PhotoPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        Album::class => AlbumPolicy::class,
+        Photo::class => PhotoPolicy::class
     ];
 
     /**
@@ -27,9 +31,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage-album',function(User $user, Album $album){
+        /* \Gate::define('manage-album',function(User $user, Album $album){
             return $user->id() == $album->user_id;
-        });
+        }); */
         //
     }
 }

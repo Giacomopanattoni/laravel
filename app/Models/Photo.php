@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     
-    public function getPathAttribute(){  // viene richiamato nella view come $album->path
+    public function getPathAttribute(){  // viene richiamato nella view come $photo->path
         
         $url = $this->img_path;
         
@@ -17,4 +17,8 @@ class Photo extends Model
         return $url;
     }
 
+
+    public function album(){
+        return $this->belongsTo(Album::class);
+    }
 }

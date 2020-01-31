@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AlbumRequest;
 use App\Models\Album;
 use App\Models\Photo;
-use Illuminate\Auth\Access\Gate;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -120,16 +120,18 @@ class AlbumsController extends Controller
 
         $album = DB::select($sql, ['id' => $id]); */
         //$album = Album::where('id',$id)->get();
+        
         $album = Album::find($id);
         
+        $this->authorize('edit',$album); // uso delle policy
+
+
         //return view('albums.edit', ['album' => $album[0]]);
 
-        /* if($album->user->id != Auth::user()->id){
-            abort(401,'Unauthorize');
-        } */
-        if(Gate::denies('manage-album', $album)){
+        if($album->user->id != Auth::user()->id){
             abort(401,'Unauthorize');
         }
+        
 
         return view('albums.edit', ['album' => $album]);
         //return redirect()->back();
