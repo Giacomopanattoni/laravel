@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','role'
     ];
 
     /**
@@ -41,5 +41,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function album(){
         return $this->hasMany(Album::class);
+    }
+
+    public function isAdmin(){
+        return $this->role === "admin";
     }
 }
