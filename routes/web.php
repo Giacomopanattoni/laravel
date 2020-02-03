@@ -13,7 +13,7 @@
 
 use App\Models\Album;
 use App\Models\Photo;
-use App\User;
+use App\Models\User;
 
 /* Route::get('/', function () {
     return view('welcome');

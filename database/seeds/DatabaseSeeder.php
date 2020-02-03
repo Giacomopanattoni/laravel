@@ -2,7 +2,7 @@
 
 use App\Models\Album;
 use App\Models\Photo;
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

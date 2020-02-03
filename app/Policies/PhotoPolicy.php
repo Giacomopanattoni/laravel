@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Photo;
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PhotoPolicy
@@ -13,7 +13,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can view any photos.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -24,7 +24,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can view the photo.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @param  \App\Photo  $photo
      * @return mixed
      */
@@ -36,7 +36,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can create photos.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -47,7 +47,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can update the photo.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @param  \App\Photo  $photo
      * @return mixed
      */
@@ -59,7 +59,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can delete the photo.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @param  \App\Photo  $photo
      * @return mixed
      */
@@ -71,7 +71,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can restore the photo.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @param  \App\Photo  $photo
      * @return mixed
      */
@@ -83,7 +83,7 @@ class PhotoPolicy
     /**
      * Determine whether the user can permanently delete the photo.
      *
-     * @param  \App\User  $user
+     * @param  App\Models\User  $user
      * @param  \App\Photo  $photo
      * @return mixed
      */
